@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 const { parseSRT, rebuildSRT, extractTextLines, applyTranslatedLines } = require('./srtParser');
+const { getConfig } = require('../config');
 
 const CACHE_DIR = path.join(__dirname, '..', 'cache');
 const inProgress = new Map();
@@ -50,7 +51,9 @@ function getSystemPrompt(langVariant) {
 }
 
 async function translateSingleLine(text, attempt = 1, langVariant = 'spa') {
-  if (!process.env.NVIDIA_API_KEY) {
+  const config = getConfig();
+  const apiKey = config.nvidiaKey || process.env.NVIDIA_API_KEY;
+  if (!apiKey) {
     throw new TranslateError('NVIDIA_API_KEY not configured', 401);
   }
 
@@ -68,7 +71,7 @@ async function translateSingleLine(text, attempt = 1, langVariant = 'spa') {
       },
       {
         headers: {
-          'Authorization': `Bearer ${process.env.NVIDIA_API_KEY}`,
+          'Authorization': `Bearer ${apiKey}`,
           'Content-Type': 'application/json'
         },
         timeout: 30000

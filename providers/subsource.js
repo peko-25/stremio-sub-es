@@ -21,11 +21,11 @@ function parseId(id) {
 
 async function getSubtitles(args, lang = 'spa') {
   const { id, type } = args;
-  if (!id || !id.startsWith('tt')) return [];
-  if (!process.env.SUBSOURCE_API_KEY) return [];
+  const cfg = getConfig();
+  const apiKey = cfg.subsourceKey || process.env.SUBSOURCE_API_KEY;
+  if (!id || !id.startsWith('tt') || !apiKey) return [];
 
   const { imdbId, season, episode } = parseId(id);
-  const apiKey = process.env.SUBSOURCE_API_KEY;
 
   try {
     const searchParams = { api_key: apiKey, searchType: 'imdb', imdb: imdbId };
@@ -70,7 +70,8 @@ async function getSubtitles(args, lang = 'spa') {
 
 async function downloadSubtitle(fileId) {
   const subId = fileId.replace('subsource-', '');
-  const apiKey = process.env.SUBSOURCE_API_KEY;
+  const { subsourceKey } = getConfig();
+  const apiKey = subsourceKey || process.env.SUBSOURCE_API_KEY;
 
   const response = await axios.get(`${API_BASE}/subtitles/${subId}/download`, {
     params: { api_key: apiKey },

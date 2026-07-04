@@ -7,7 +7,7 @@ const { getRouter } = require('stremio-addon-sdk');
 const addonInterface = require('./addon');
 const subdl = require('./providers/subdl');
 const subsource = require('./providers/subsource');
-const { runWithConfig } = require('./config');
+const { runWithConfig, saveConfig, loadConfig } = require('./config');
 
 const app = express();
 const port = process.env.PORT || 7000;
@@ -38,7 +38,7 @@ const requestLogger = (req, res, next) => {
 const REQUIRED_ENV = ['NVIDIA_API_KEY'];
 const missingVars = REQUIRED_ENV.filter(key => !process.env[key]);
 if (missingVars.length > 0) {
-  console.warn(`[Config] Missing required env vars: ${missingVars.join(', ')} — AI translation will fail`);
+  console.log(`[Config] NVIDIA_API_KEY not in env — users must provide it via /configure`);
 }
 
 if (!fs.existsSync(CACHE_DIR)) {
@@ -46,10 +46,27 @@ if (!fs.existsSync(CACHE_DIR)) {
 }
 
 app.use(requestLogger);
+app.use(express.json());
 
+const STORED_CFG_PATTERN = /^\/cfg_([a-f0-9]{12})\/(auto|separate)\/(any|os|subdl|subsource)\/(spa|lat|esp)(\/.*)?$/;
 const CONFIG_PATTERN = /^\/(auto|separate)\/(any|os|subdl|subsource)\/(spa|lat|esp)(\/.*)?$/;
 
 app.use((req, res, next) => {
+  // Check for stored config first: /cfg_<hash>/mode/primary/lang/...
+  const storedMatch = req.path.match(STORED_CFG_PATTERN);
+  if (storedMatch) {
+    const stored = loadConfig(storedMatch[1]);
+    if (stored) {
+      req.url = storedMatch[5] || '/';
+      runWithConfig({
+        mode: storedMatch[2], primary: storedMatch[3], lang: storedMatch[4],
+        baseUrl: BASE_URL,
+        nvidiaKey: stored.nvidiaKey, subdlKey: stored.subdlKey, subsourceKey: stored.subsourceKey
+      }, () => next());
+      return;
+    }
+  }
+  // Check for inline config: /mode/primary/lang/...
   const match = req.path.match(CONFIG_PATTERN);
   if (match) {
     req.url = match[4] || '/';
@@ -91,6 +108,14 @@ app.get('/subfile/:id', asyncHandler(async (req, res) => {
   res.set('Content-Type', 'text/plain; charset=utf-8');
   res.send(content);
 }));
+
+app.post('/api/config', (req, res) => {
+  const { nvidiaKey, subdlKey, subsourceKey, mode, primary, lang } = req.body || {};
+  if (!nvidiaKey) return res.status(400).json({ error: 'NVIDIA_API_KEY is required' });
+  const id = saveConfig({ nvidiaKey, subdlKey, subsourceKey });
+  const installUrl = `${BASE_URL}/cfg_${id}/${mode || 'auto'}/${primary || 'any'}/${lang || 'spa'}/manifest.json`;
+  res.json({ configId: id, installUrl });
+});
 
 app.use(getRouter(addonInterface));
 

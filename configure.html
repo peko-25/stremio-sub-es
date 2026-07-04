@@ -417,10 +417,32 @@ footer p{font-size:.85rem;color:#71717A}
           </div>
         </div>
       </div>
+      </div>
+
+      <div class="config-group full">
+        <span class="config-label">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          API Keys
+        </span>
+        <div style="display:flex;flex-direction:column;gap:.75rem">
+          <input type="password" id="nvidia-key" class="cfg-input" placeholder="NVIDIA_API_KEY (obligatorio)" style="border-color:rgba(139,92,246,.3)">
+          <input type="password" id="subdl-key" class="cfg-input" placeholder="SUBDL_API_KEY (opcional)">
+          <input type="password" id="subsource-key" class="cfg-input" placeholder="SUBSOURCE_API_KEY (opcional)">
+        </div>
+      </div>
+
+      <style>
+        .cfg-input{
+          width:100%;padding:.7rem 1rem;border-radius:10px;font-size:.9rem;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+          background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);color:#D4D4D8;outline:none;transition:border-color .2s
+        }
+        .cfg-input:focus{border-color:#8B5CF6;box-shadow:0 0 0 3px rgba(139,92,246,.1)}
+        .cfg-input::placeholder{color:#52525B;font-family:Inter,'Segoe UI',Arial,sans-serif}
+      </style>
     </div>
 
     <div class="preview-box">
-      <code id="url-preview">http://127.0.0.1:7000/auto/any/spa/manifest.json</code>
+      <code id="url-preview">Configurá tus API keys y guardá</code>
 <script>const BASE_URL = window.location.protocol + '//' + window.location.host;</script>
       <button class="btn-copy" id="copy-btn" title="Copiar enlace">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
@@ -428,13 +450,13 @@ footer p{font-size:.85rem;color:#71717A}
     </div>
 
     <div class="config-actions">
-      <button id="install-btn" class="btn btn-primary">
+      <button id="save-btn" class="btn btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Guardar configuración
+      </button>
+      <button id="install-btn" class="btn btn-secondary" disabled>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         <span id="install-btn-text">Copiar URL para Stremio</span>
-      </button>
-      <button id="install-stremio-btn" class="btn btn-secondary">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        Abrir en Stremio
       </button>
     </div>
   </div>
@@ -538,29 +560,29 @@ footer p{font-size:.85rem;color:#71717A}
     <div class="step">
       <div class="step-num">1</div>
       <div class="step-content">
-        <h4>Configurá tus preferencias</h4>
-        <p>Elegí el modo, provider principal y variante de español en el panel de arriba.</p>
+        <h4>Ingresá tus API Keys</h4>
+        <p>Completá al menos la key de NVIDIA (gratis en build.nvidia.com). SubDL y Subsource son opcionales.</p>
       </div>
     </div>
     <div class="step">
       <div class="step-num">2</div>
       <div class="step-content">
-        <h4>Copiá la URL</h4>
-        <p>Hacé clic en "Copiar URL para Stremio" o copiá manualmente el enlace de previsualización.</p>
+        <h4>Configurá y guardá</h4>
+        <p>Elegí modo, provider y variante de español. Click en "Guardar configuración".</p>
       </div>
     </div>
     <div class="step">
       <div class="step-num">3</div>
       <div class="step-content">
-        <h4>Pegala en Stremio</h4>
-        <p>Andá a Stremio → Addons → botón "Install Addon" → pegá la URL.</p>
+        <h4>Copiá la URL</h4>
+        <p>La URL se copia automáticamente al guardar. También podés usar el botón "Copiar URL para Stremio".</p>
       </div>
     </div>
     <div class="step">
       <div class="step-num">4</div>
       <div class="step-content">
-        <h4>Disfrutá</h4>
-        <p>Si el addon no encuentra español nativo, traduce desde inglés con AI y te lo muestra igual.</p>
+        <h4>Pegala en Stremio</h4>
+        <p>Andá a Stremio → Addons → botón "Install Addon" → pegá la URL.</p>
       </div>
     </div>
   </div>
@@ -656,32 +678,76 @@ const langRadios = document.querySelectorAll('input[name="lang"]');
 const primaryRadios = document.querySelectorAll('input[name="primary"]');
 const primaryGroup = document.getElementById('primary-group');
 const urlPreview = document.getElementById('url-preview');
+const saveBtn = document.getElementById('save-btn');
 const installBtn = document.getElementById('install-btn');
 const installBtnText = document.getElementById('install-btn-text');
-const installStremioBtn = document.getElementById('install-stremio-btn');
 const copyBtn = document.getElementById('copy-btn');
+const nvidiaInput = document.getElementById('nvidia-key');
+const subdlInput = document.getElementById('subdl-key');
+const subsourceInput = document.getElementById('subsource-key');
 
-function getInstallURL() {
-  const mode = document.querySelector('input[name="mode"]:checked').value;
-  const lang = document.querySelector('input[name="lang"]:checked').value;
-  const primary = document.querySelector('input[name="primary"]:checked').value;
-  return BASE_URL + '/' + mode + '/' + primary + '/' + lang + '/manifest.json';
-}
+let currentInstallUrl = null;
 
-function buildURL() {
-  const url = getInstallURL();
-  urlPreview.textContent = url;
+function getSelectedOptions() {
+  return {
+    mode: document.querySelector('input[name="mode"]:checked').value,
+    lang: document.querySelector('input[name="lang"]:checked').value,
+    primary: document.querySelector('input[name="primary"]:checked').value
+  };
 }
 
 function togglePrimary() {
   const mode = document.querySelector('input[name="mode"]:checked').value;
   primaryGroup.style.display = mode === 'auto' ? '' : 'none';
-  buildURL();
 }
 
 modeRadios.forEach(r => r.addEventListener('change', togglePrimary));
-langRadios.forEach(r => r.addEventListener('change', buildURL));
-primaryRadios.forEach(r => r.addEventListener('change', buildURL));
+langRadios.forEach(r => r.addEventListener('change', () => {}));
+primaryRadios.forEach(r => r.addEventListener('change', () => {}));
+
+saveBtn.addEventListener('click', async function() {
+  const opts = getSelectedOptions();
+  const nvidiaKey = nvidiaInput.value.trim();
+  if (!nvidiaKey) {
+    urlPreview.textContent = '⚠️ NVIDIA_API_KEY es obligatoria';
+    nvidiaInput.focus();
+    return;
+  }
+
+  saveBtn.disabled = true;
+  saveBtn.textContent = 'Guardando...';
+
+  try {
+    const res = await fetch(BASE_URL + '/api/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nvidiaKey,
+        subdlKey: subdlInput.value.trim() || undefined,
+        subsourceKey: subsourceInput.value.trim() || undefined,
+        mode: opts.mode,
+        primary: opts.primary,
+        lang: opts.lang
+      })
+    });
+
+    if (!res.ok) throw new Error('Error del servidor');
+
+    const data = await res.json();
+    currentInstallUrl = data.installUrl;
+    urlPreview.textContent = data.installUrl;
+    installBtn.disabled = false;
+
+    // Also copy to clipboard automatically
+    navigator.clipboard.writeText(data.installUrl);
+    saveBtn.textContent = '✅ Guardado y copiado';
+    setTimeout(() => { saveBtn.textContent = 'Guardar configuración'; saveBtn.disabled = false; }, 2000);
+  } catch (e) {
+    urlPreview.textContent = '❌ Error al guardar: ' + e.message;
+    saveBtn.textContent = 'Guardar configuración';
+    saveBtn.disabled = false;
+  }
+});
 
 function copyToClipboard(text, btnEl, feedbackEl) {
   navigator.clipboard.writeText(text).then(() => {
@@ -697,15 +763,9 @@ copyBtn.addEventListener('click', function() {
 });
 
 installBtn.addEventListener('click', function() {
-  const url = getInstallURL();
-  copyToClipboard(url, this, installBtnText);
-});
-
-installStremioBtn.addEventListener('click', function() {
-  const url = getInstallURL();
-  const stremioUrl = 'stremio://' + url.slice(url.indexOf('://') + 3);
-  window.location.href = stremioUrl;
-  copyToClipboard(url, installStremioBtn, installStremioBtn.querySelector('svg'));
+  if (currentInstallUrl) {
+    copyToClipboard(currentInstallUrl, this, installBtnText);
+  }
 });
 
 togglePrimary();

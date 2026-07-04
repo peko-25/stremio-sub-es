@@ -13,12 +13,14 @@ function langToSubdl(lang) {
 
 async function getSubtitles(args, lang = 'spa') {
   const { id, type } = args;
+  const { subdlKey } = getConfig();
+  const apiKey = subdlKey || process.env.SUBDL_API_KEY;
 
-  if (!id || !id.startsWith('tt') || !process.env.SUBDL_API_KEY) return [];
+  if (!id || !id.startsWith('tt') || !apiKey) return [];
 
   try {
     const params = {
-      api_key: process.env.SUBDL_API_KEY,
+      api_key: apiKey,
       imdb_id: id,
       type: type === 'movie' ? 'movie' : 'tv',
       subs_per_page: 10,
@@ -72,7 +74,11 @@ async function downloadSubtitle(fileId) {
 
   const sdId = match[1];
   const subId = match[2];
-  const zipUrl = `https://dl.subdl.com/subtitle/${sdId}-${subId}.zip?api_key=${process.env.SUBDL_API_KEY}`;
+  const { subdlKey } = getConfig();
+  const apiKey = subdlKey || process.env.SUBDL_API_KEY;
+  if (!apiKey) throw new Error('SUBDL_API_KEY not configured');
+
+  const zipUrl = `https://dl.subdl.com/subtitle/${sdId}-${subId}.zip?api_key=${apiKey}`;
 
   const response = await axios.get(zipUrl, {
     responseType: 'arraybuffer',
