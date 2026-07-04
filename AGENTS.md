@@ -1,39 +1,41 @@
 # AGENTS.md
 
 ## Setup
-- Copy `.env.example` to `.env` or create `.env` with required keys:
-  - `NVIDIA_API_KEY` (required for translation)
-  - `SUBDL_API_KEY` (optional, for SubDL)
-  - `OPENSUBTITLES_USER_AGENT` (optional)
-- Install dependencies: `npm install`
+- `.env` with `NVIDIA_API_KEY` (required), `SUBDL_API_KEY` (optional), `SUBSOURCE_API_KEY` (optional)
+- `npm install`
 
 ## Running
-- Start server: `node server.js` (or `npm run dev` if script exists)
-- Addon runs on port from `PORT` env (default 7000)
-- Access manifest at `http://127.0.0.1:<port>/manifest.json`
+- `node server.js` — listen on `PORT` env or 7000
+- Open `http://127.0.0.1:PORT/configure` for config UI
+- No hot-reload; restart after edits
 
-## Testing
-- Run tests: `npm test` (or `npm test` if script exists)
-- To test translation, download an English sub and trigger translation via addon flow
+## Architecture
 
-## Lint / Typecheck
-- Lint: `npm run lint`
-- Typecheck: `npm run typecheck`
-- Run both before committing
+```
+server.js          — Express, mounts SDK router + /configure + /subfile/:id dispatch
+addon.js           — Stremio subtitle handler, creates manifest + builder
+config.js          — Global config singleton (mode/primary/lang), set per-request via URL prefix
+providers/
+  opensubtitles.js — strem.io proxy (no key)
+  subdl.js         — SubDL API (key), ZIP extraction
+  subsource.js     — Subsource API (key), ZIP extraction
+  translateAI.js   — NVIDIA Riva Translate 4B, line-by-line, concurrencia 3 + 300ms delay, retry 429
+  srtParser.js     — Parse/rebuild SRT
+configure.html     — Landing page per SPECIFICATION.md, dark cyber theme, no frameworks
+```
 
-## Debugging
-- View logs in console; addon logs to stdout
-- Check `cache/` for translation cache files
-- Use `console.log` in addon.js for debugging
+## URL config prefix
+Config encoded in URL path: `/:mode/:primary/:lang/manifest.json`
+- `mode`: `auto` | `separate`
+- `primary`: `any` | `os` | `subdl` | `subsource`
+- `lang`: `spa` | `lat` | `esp`
+No prefix = defaults (`auto/any/spa`, backward-compatible).
 
-## Key Files
-- `addon.js`: main logic, flow Spanish → English → translate → cache → serve
-- `server.js`: Express server, routes `/subfile/:id` and `/subfile/translated-:hash`
-- `providers/`: OS v3, SubDL, srtParser, translateAI
-- `cache/`: stores translated SRT files (hashed)
-
-## Critical Gotchas
-- NVIDIA API key must be valid and start with `nvapi-`; otherwise translation fails with 401
-- Model name must be `nvidia/riva-translate-4b-instruct-v1.1` (dot, not underscore)
-- OpenSubtitles v3 uses proxy; no API key needed
-- SubDL requires ZIP extraction; ensure `adm-zip` is installed
+## Key gotchas
+- **NVIDIA model**: `nvidia/riva-translate-4b-instruct-v1.1` (dot, not underscore)
+- **NVIDIA API key**: must start with `nvapi-`; 401 = invalid/expired
+- **OpenSubtitles**: uses strem.io proxy, no user API key needed (the `OPENSUBTITLES_API_KEY` env var is unused)
+- **SubDL/Subsource**: return ZIPs; `adm-zip` + `iconv-lite` for extraction
+- **Translate cache**: `cache/` dir by MD5 hash; delete files to force retranslation
+- **PowerShell**: use `npm.cmd` instead of `npm` (ExecutionPolicy restriction on this system)
+- **No lint/typecheck scripts**: none configured
