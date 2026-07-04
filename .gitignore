@@ -10,3 +10,7 @@ cache/
 # OS files
 Thumbs.db
 .DS_Store
+
+# OpenCode internal
+.agents/
+skills-lock.json
