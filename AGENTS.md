@@ -2,13 +2,12 @@
 
 ## Setup
 - `.env` with `NVIDIA_API_KEY` (required), `SUBDL_API_KEY` (optional), `SUBSOURCE_API_KEY` (optional)
-- `BASE_URL` env for cloud hosting (e.g. `https://tu-app.onrender.com`); defaults to `http://127.0.0.1:PORT`
 - `npm install`
 
-## Running
-- `node server.js` — listen on `PORT` env or 7000
-- Open `http://127.0.0.1:PORT/configure` for config UI
-- No hot-reload; restart after edits
+## Running (deployed on Render)
+- **NO iniciar servidor local** — el servicio corre en `https://stremio-sub-es.onrender.com`
+- Para ver cambios: hacer commit → push → Render se auto-despliega
+- Para configurar: abrir `https://stremio-sub-es.onrender.com/configure`
 
 ## Architecture
 
