@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Subtítulos Español + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:Inter,'Segoe UI',Arial,sans-serif;
+  background:#09090B;
+  color:#D4D4D8;
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden
+}
+a{color:#8B5CF6;text-decoration:none;transition:color .2s}
+a:hover{color:#A78BFA}
+
+.hero{
+  min-height:70vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:2rem;
+  position:relative;
+  background:
+    radial-gradient(ellipse 600px 400px at 50% 30%, rgba(139,92,246,.08) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 300px at 70% 60%, rgba(59,130,246,.06) 0%, transparent 70%),
+    radial-gradient(ellipse 300px 400px at 30% 70%, rgba(6,182,212,.04) 0%, transparent 70%)
+}
+.hero::after{
+  content:'';
+  position:absolute;
+  bottom:0;left:10%;right:10%;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(139,92,246,.3),transparent)
+}
+.hero-badge{
+  display:inline-block;
+  padding:.35rem 1rem;
+  border-radius:999px;
+  font-size:.8rem;
+  font-weight:500;
+  background:rgba(139,92,246,.12);
+  color:#A78BFA;
+  border:1px solid rgba(139,92,246,.2);
+  margin-bottom:1.5rem;
+  letter-spacing:.5px
+}
+.hero h1{
+  font-size:clamp(2rem,5vw,3.5rem);
+  font-weight:800;
+  background:linear-gradient(135deg,#E4E4E7 0%,#A78BFA 50%,#60A5FA 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  line-height:1.2;
+  margin-bottom:1rem
+}
+.hero p{
+  font-size:clamp(1rem,2vw,1.2rem);
+  color:#A1A1AA;
+  max-width:560px;
+  margin:0 auto 2rem
+}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center}
+.btn{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.75rem 1.5rem;
+  border-radius:12px;
+  font-size:.95rem;font-weight:600;font-family:inherit;
+  border:none;cursor:pointer;
+  transition:all .2s ease;
+  text-decoration:none
+}
+.btn-primary{
+  background:linear-gradient(135deg,#7C3AED,#6366F1);
+  color:#fff;box-shadow:0 4px 20px rgba(124,58,237,.3)
+}
+.btn-primary:hover{
+  transform:translateY(-2px);
+  box-shadow:0 6px 28px rgba(124,58,237,.45)
+}
+.btn-primary:active{transform:scale(.98);box-shadow:none}
+.btn-secondary{
+  background:rgba(255,255,255,.06);
+  color:#D4D4D8;border:1px solid rgba(255,255,255,.1)
+}
+.btn-secondary:hover{
+  background:rgba(255,255,255,.1);
+  transform:translateY(-2px)
+}
+.btn-secondary:active{transform:scale(.98)}
+
+.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
+section{padding:4rem 0}
+
+.section-label{
+  display:inline-block;
+  font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;
+  color:#8B5CF6;margin-bottom:.75rem
+}
+.section-title{
+  font-size:clamp(1.5rem,3vw,2rem);
+  font-weight:700;color:#E4E4E7;
+  margin-bottom:1rem
+}
+.section-desc{color:#A1A1AA;margin-bottom:2.5rem}
+
+.description-card{
+  background:linear-gradient(135deg,rgba(139,92,246,.06),rgba(59,130,246,.04));
+  border:1px solid rgba(139,92,246,.12);
+  border-radius:16px;
+  padding:2rem 2.5rem;
+  text-align:center
+}
+.description-card p{font-size:1.1rem;color:#C4C4C9;line-height:1.8}
+
+/* Config Card */
+.config-card{
+  background:rgba(16,18,26,.8);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:16px;
+  padding:2.5rem;
+  box-shadow:0 8px 40px rgba(0,0,0,.3);
+  transition:box-shadow .3s
+}
+.config-card:hover{box-shadow:0 12px 50px rgba(139,92,246,.1)}
+
+.config-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem}
+.config-group{display:flex;flex-direction:column;gap:.5rem}
+.config-group.full{grid-column:1/-1}
+.config-label{
+  font-size:.85rem;font-weight:600;color:#A1A1AA;
+  display:flex;align-items:center;gap:.5rem
+}
+.config-options{display:flex;gap:.5rem;flex-wrap:wrap}
+.config-option{
+  position:relative;display:flex;align-items:center
+}
+.config-option input{position:absolute;opacity:0;width:0;height:0}
+.config-option label{
+  display:inline-flex;align-items:center;gap:.35rem;
+  padding:.5rem 1rem;
+  border-radius:10px;
+  font-size:.85rem;font-weight:500;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  color:#A1A1AA;
+  cursor:pointer;
+  transition:all .2s ease
+}
+.config-option label:hover{
+  background:rgba(139,92,246,.08);
+  border-color:rgba(139,92,246,.2)
+}
+.config-option input:checked+label{
+  background:rgba(139,92,246,.15);
+  border-color:#8B5CF6;
+  color:#C4C4FF;
+  box-shadow:0 0 20px rgba(139,92,246,.1)
+}
+.config-option input:disabled+label{
+  opacity:.4;cursor:not-allowed
+}
+
+.preview-box{
+  background:rgba(0,0,0,.3);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:12px;
+  padding:1rem 1.25rem;
+  display:flex;align-items:center;gap:.75rem;
+  margin-bottom:1.5rem
+}
+.preview-box code{
+  font-family:ui-monospace,SFMono-Regular,'SF Mono',Consolas,monospace;
+  font-size:.85rem;color:#A78BFA;
+  word-break:break-all;flex:1
+}
+.preview-box .btn-copy{
+  flex-shrink:0;
+  background:rgba(139,92,246,.12);
+  border:1px solid rgba(139,92,246,.2);
+  border-radius:8px;
+  padding:.4rem .75rem;
+  color:#A78BFA;font-size:.8rem;
+  cursor:pointer;font-family:inherit;
+  transition:all .2s
+}
+.preview-box .btn-copy:hover{background:rgba(139,92,246,.2)}
+
+.config-actions{
+  display:flex;gap:1rem;flex-wrap:wrap;
+  justify-content:center;margin-top:1rem
+}
+.config-actions .btn{min-width:200px;justify-content:center}
+
+/* Features */
+.features-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:1.5rem
+}
+.feature-card{
+  background:rgba(16,18,26,.6);
+  border:1px solid rgba(255,255,255,.05);
+  border-radius:16px;
+  padding:1.75rem;
+  transition:all .3s ease
+}
+.feature-card:hover{
+  background:rgba(16,18,26,.9);
+  border-color:rgba(139,92,246,.15);
+  transform:translateY(-3px);
+  box-shadow:0 8px 30px rgba(139,92,246,.06)
+}
+.feature-icon{
+  width:44px;height:44px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:12px;
+  background:rgba(139,92,246,.1);
+  margin-bottom:1rem
+}
+.feature-icon svg{width:22px;height:22px;fill:none;stroke:#8B5CF6;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.feature-card h3{font-size:1rem;font-weight:600;color:#E4E4E7;margin-bottom:.5rem}
+.feature-card p{font-size:.9rem;color:#A1A1AA;line-height:1.6}
+
+/* Steps */
+.steps{display:flex;flex-direction:column;gap:1rem}
+.step{
+  display:flex;gap:1.25rem;align-items:flex-start;
+  padding:1.25rem 1.5rem;
+  background:rgba(16,18,26,.5);
+  border:1px solid rgba(255,255,255,.04);
+  border-radius:12px;
+  transition:all .3s
+}
+.step:hover{
+  background:rgba(16,18,26,.8);
+  border-color:rgba(139,92,246,.1)
+}
+.step-num{
+  flex-shrink:0;
+  width:36px;height:36px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:10px;
+  background:rgba(139,92,246,.12);
+  color:#A78BFA;
+  font-weight:700;font-size:.9rem
+}
+.step-content h4{font-size:.95rem;font-weight:600;color:#E4E4E7;margin-bottom:.25rem}
+.step-content p{font-size:.85rem;color:#A1A1AA}
+
+/* FAQ */
+.faq-list{display:flex;flex-direction:column;gap:.75rem}
+.faq-item{
+  background:rgba(16,18,26,.5);
+  border:1px solid rgba(255,255,255,.04);
+  border-radius:12px;
+  overflow:hidden
+}
+.faq-q{
+  width:100%;
+  padding:1.25rem 1.5rem;
+  background:none;border:none;
+  font-family:inherit;font-size:.95rem;font-weight:500;color:#D4D4D8;
+  cursor:pointer;text-align:left;
+  display:flex;justify-content:space-between;align-items:center;
+  transition:color .2s
+}
+.faq-q:hover{color:#E4E4E7}
+.faq-q svg{
+  width:16px;height:16px;
+  stroke:#8B5CF6;stroke-width:2;fill:none;
+  transition:transform .3s ease
+}
+.faq-q.active svg{transform:rotate(180deg)}
+.faq-a{
+  max-height:0;overflow:hidden;
+  transition:max-height .3s ease,padding .3s ease
+}
+.faq-a-inner{padding:0 1.5rem 1.25rem;font-size:.9rem;color:#A1A1AA;line-height:1.7}
+
+/* Notes */
+.notes-box{
+  background:rgba(251,191,36,.04);
+  border:1px solid rgba(251,191,36,.1);
+  border-radius:12px;
+  padding:1.5rem 2rem
+}
+.notes-box p{font-size:.9rem;color:#A1A1AA;margin-bottom:.5rem}
+.notes-box p:last-child{margin-bottom:0}
+.notes-box strong{color:#D4D4D8}
+
+/* Footer */
+footer{
+  border-top:1px solid rgba(255,255,255,.04);
+  padding:2rem 0;
+  text-align:center
+}
+footer p{font-size:.85rem;color:#71717A}
+
+@media(max-width:768px){
+  .config-grid{grid-template-columns:1fr}
+  .config-actions .btn{min-width:0;flex:1}
+  .config-card{padding:1.5rem}
+  .description-card{padding:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <span class="hero-badge">v1.3.0 &middot; Multi-proveedor</span>
+  <h1>Subtítulos Español + AI</h1>
+  <p>Subtítulos en español automáticos para Stremio desde OpenSubtitles, SubDL y Subsource, con traducción AI vía NVIDIA como respaldo.</p>
+  <div class="hero-actions">
+    <a href="#config" class="btn btn-primary">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      Configurar
+    </a>
+    <a href="https://github.com/anomalyco/opencode/issues" target="_blank" class="btn btn-secondary">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+      GitHub
+    </a>
+  </div>
+</header>
+
+<main class="container">
+
+<section id="desc">
+  <div class="description-card">
+    <p>
+      Busca subtítulos en español desde <strong>3 proveedores</strong> simultáneamente.
+      Si no encuentra español nativo, descarga inglés y lo traduce automáticamente
+      con el modelo <strong>NVIDIA Riva Translate 4B</strong>.
+    </p>
+  </div>
+</section>
+
+<section id="config">
+  <div style="text-align:center;margin-bottom:2rem">
+    <span class="section-label">Configuración</span>
+    <h2 class="section-title">Personaliza tu experiencia</h2>
+    <p class="section-desc">Elegí cómo querés ver los subtítulos y qué variante de español preferís.</p>
+  </div>
+
+  <div class="config-card" id="config-card">
+    <div class="config-grid">
+      <div class="config-group">
+        <span class="config-label">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+          Modo
+        </span>
+        <div class="config-options" id="mode-group">
+          <div class="config-option">
+            <input type="radio" name="mode" id="mode-auto" value="auto" checked>
+            <label for="mode-auto">Automático</label>
+          </div>
+          <div class="config-option">
+            <input type="radio" name="mode" id="mode-separate" value="separate">
+            <label for="mode-separate">Todos separados</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="config-group">
+        <span class="config-label">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><globe icon-name="globe"/><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Variante de español
+        </span>
+        <div class="config-options">
+          <div class="config-option">
+            <input type="radio" name="lang" id="lang-spa" value="spa" checked>
+            <label for="lang-spa">Genérico</label>
+          </div>
+          <div class="config-option">
+            <input type="radio" name="lang" id="lang-lat" value="lat">
+            <label for="lang-lat">Latinoamérica</label>
+          </div>
+          <div class="config-option">
+            <input type="radio" name="lang" id="lang-esp" value="esp">
+            <label for="lang-esp">España</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="config-group" id="primary-group">
+        <span class="config-label">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          Provider principal (modo Auto)
+        </span>
+        <div class="config-options">
+          <div class="config-option">
+            <input type="radio" name="primary" id="pri-any" value="any" checked>
+            <label for="pri-any">El que tenga</label>
+          </div>
+          <div class="config-option">
+            <input type="radio" name="primary" id="pri-os" value="os">
+            <label for="pri-os">OpenSubtitles</label>
+          </div>
+          <div class="config-option">
+            <input type="radio" name="primary" id="pri-subdl" value="subdl">
+            <label for="pri-subdl">SubDL</label>
+          </div>
+          <div class="config-option">
+            <input type="radio" name="primary" id="pri-subsource" value="subsource">
+            <label for="pri-subsource">Subsource</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="preview-box">
+      <code id="url-preview">http://127.0.0.1:7000/auto/any/spa/manifest.json</code>
+<script>const BASE_URL = window.location.protocol + '//' + window.location.host;</script>
+      <button class="btn-copy" id="copy-btn" title="Copiar enlace">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      </button>
+    </div>
+
+    <div class="config-actions">
+      <button id="install-btn" class="btn btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span id="install-btn-text">Copiar URL para Stremio</span>
+      </button>
+      <button id="install-stremio-btn" class="btn btn-secondary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Abrir en Stremio
+      </button>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div style="text-align:center;margin-bottom:2.5rem">
+    <span class="section-label">Características</span>
+    <h2 class="section-title">Todo lo que necesitás</h2>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <h3>3 Proveedores</h3>
+      <p>OpenSubtitles, SubDL y Subsource. Busca en todos simultáneamente y te muestra el mejor resultado.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <h3>Traducción AI</h3>
+      <p>Si no hay español nativo, descarga inglés y lo traduce con NVIDIA Riva Translate 4B al instante.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      </div>
+      <h3>Variantes regionales</h3>
+      <p>Elegí entre español genérico, latinoamericano o de España. La AI se adapta a tu preferencia.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+      </div>
+      <h3>Modo Separado</h3>
+      <p>Vé todos los subs en español de cada provider como opciones individuales, bajo la misma categoría.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+      </div>
+      <h3>Cache inteligente</h3>
+      <p>Las traducciones se guardan localmente. La primera request es lenta, pero las siguientes son instantáneas.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <h3>Sin registro</h3>
+      <p>Solo necesitás tu propia API key de NVIDIA (gratuita). Los subtítulos se buscan sin cuentas ni claves.</p>
+    </div>
+  </div>
+</section>
+
+<section id="apis">
+  <div style="text-align:center;margin-bottom:2.5rem">
+    <span class="section-label">APIs</span>
+    <h2 class="section-title">Fuentes de subtítulos</h2>
+    <p class="section-desc">El addon busca subtítulos en múltiples proveedores y usa AI como respaldo.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(59,130,246,.1)">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      </div>
+      <h3>OpenSubtitles v3</h3>
+      <p>Proxy gratuito vía <strong>strem.io</strong>. No necesita API key propia — el proxy maneja la autenticación. Busca por IMDb ID en películas y series. Buena cobertura general.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(139,92,246,.1)">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <h3>SubDL</h3>
+      <p>API key gratuita en <a href="https://subdl.com" target="_blank">subdl.com</a>. Busca por IMDb ID. Requiere <code>SUBDL_API_KEY</code> en <code>.env</code>. Series y películas.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(6,182,212,.1)">
+        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <h3>Subsource</h3>
+      <p>API key gratuita en <a href="https://subsource.net/api-docs" target="_blank">subsource.net</a>. Requiere <code>SUBSOURCE_API_KEY</code> en <code>.env</code>. Películas y series.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:rgba(16,185,129,.1)">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <h3>NVIDIA Riva Translate</h3>
+      <p>Modelo de traducción 4B. API key gratis en <a href="https://build.nvidia.com/nvidia/riva-translate-4b-instruct" target="_blank">build.nvidia.com</a>. Requiere <code>NVIDIA_API_KEY</code> en <code>.env</code>. Traduce inglés a español línea por línea.</p>
+    </div>
+  </div>
+</section>
+
+<section id="steps">
+  <div style="text-align:center;margin-bottom:2.5rem">
+    <span class="section-label">Instalación</span>
+    <h2 class="section-title">Paso a paso</h2>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>Configurá tus preferencias</h4>
+        <p>Elegí el modo, provider principal y variante de español en el panel de arriba.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Copiá la URL</h4>
+        <p>Hacé clic en "Copiar URL para Stremio" o copiá manualmente el enlace de previsualización.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>Pegala en Stremio</h4>
+        <p>Andá a Stremio → Addons → botón "Install Addon" → pegá la URL.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h4>Disfrutá</h4>
+        <p>Si el addon no encuentra español nativo, traduce desde inglés con AI y te lo muestra igual.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div style="text-align:center;margin-bottom:2.5rem">
+    <span class="section-label">FAQ</span>
+    <h2 class="section-title">Preguntas frecuentes</h2>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFAQ(this)">
+        ¿Necesito una API key?
+        <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a"><div class="faq-a-inner">
+        Sí, necesitás una API key de NVIDIA (gratuita en <a href="https://build.nvidia.com/nvidia/riva-translate-4b-instruct" target="_blank">build.nvidia.com</a>). También podés agregar key de SubDL y Subsource para más resultados.
+      </div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFAQ(this)">
+        ¿Cómo obtengo la API key de NVIDIA?
+        <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a"><div class="faq-a-inner">
+        Andá a <a href="https://build.nvidia.com/nvidia/riva-translate-4b-instruct" target="_blank">build.nvidia.com</a>, create una cuenta, y generá una API key. Es completamente gratis.
+      </div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFAQ(this)">
+        ¿Qué diferencia hay entre modo Auto y Separado?
+        <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a"><div class="faq-a-inner">
+        <strong>Auto:</strong> muestra el primer subtítulo en español que encuentre (priorizando tu provider favorito).<br>
+        <strong>Separado:</strong> muestra todos los subs en español de todos los providers, cada uno como opción individual bajo la misma etiqueta.
+      </div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFAQ(this)">
+        ¿Los subtítulos traducidos son buenos?
+        <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a"><div class="faq-a-inner">
+        Sí, el modelo NVIDIA Riva Translate 4B está entrenado específicamente para traducción. Es rápido, preciso, y respeta el formato SRT original.
+      </div></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFAQ(this)">
+        ¿Puedo cambiar la configuración después de instalar?
+        <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a"><div class="faq-a-inner">
+        Sí, volvé a esta página, ajustá las opciones y reinstalá el addon en Stremio con el nuevo enlace.
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<section id="notes">
+  <span class="section-label">Notas</span>
+  <h2 class="section-title">Compatibilidad</h2>
+  <div class="notes-box">
+    <p><strong>Stremio:</strong> funciona en Windows, macOS, Linux, Android y Web.</p>
+    <p><strong>Servidor:</strong> el addon corre localmente en tu PC (puerto 7000). Mientras el server esté corriendo, los subtítulos funcionan.</p>
+    <p><strong>Subtítulos:</strong> las fuentes incluyen OpenSubtitles (v3 proxy), SubDL y Subsource. La traducción AI usa NVIDIA Riva Translate 4B.</p>
+    <p><strong>Open Source:</strong> el código está disponible en <a href="https://github.com/anomalyco/opencode/issues" target="_blank">GitHub</a>.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <p>Subtítulos Español + AI &mdash; Multi-proveedor v1.3.0</p>
+  </div>
+</footer>
+
+<script>
+function toggleFAQ(btn) {
+  btn.classList.toggle('active');
+  const content = btn.nextElementSibling;
+  if (content.style.maxHeight) {
+    content.style.maxHeight = null;
+  } else {
+    content.style.maxHeight = content.scrollHeight + 'px';
+  }
+}
+
+const modeRadios = document.querySelectorAll('input[name="mode"]');
+const langRadios = document.querySelectorAll('input[name="lang"]');
+const primaryRadios = document.querySelectorAll('input[name="primary"]');
+const primaryGroup = document.getElementById('primary-group');
+const urlPreview = document.getElementById('url-preview');
+const installBtn = document.getElementById('install-btn');
+const installBtnText = document.getElementById('install-btn-text');
+const installStremioBtn = document.getElementById('install-stremio-btn');
+const copyBtn = document.getElementById('copy-btn');
+
+function getInstallURL() {
+  const mode = document.querySelector('input[name="mode"]:checked').value;
+  const lang = document.querySelector('input[name="lang"]:checked').value;
+  const primary = document.querySelector('input[name="primary"]:checked').value;
+  return BASE_URL + '/' + mode + '/' + primary + '/' + lang + '/manifest.json';
+}
+
+function buildURL() {
+  const url = getInstallURL();
+  urlPreview.textContent = url;
+}
+
+function togglePrimary() {
+  const mode = document.querySelector('input[name="mode"]:checked').value;
+  primaryGroup.style.display = mode === 'auto' ? '' : 'none';
+  buildURL();
+}
+
+modeRadios.forEach(r => r.addEventListener('change', togglePrimary));
+langRadios.forEach(r => r.addEventListener('change', buildURL));
+primaryRadios.forEach(r => r.addEventListener('change', buildURL));
+
+function copyToClipboard(text, btnEl, feedbackEl) {
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = feedbackEl.textContent;
+    feedbackEl.textContent = 'Copiado';
+    btnEl.style.borderColor = '#22C55E';
+    setTimeout(() => { feedbackEl.textContent = orig; btnEl.style.borderColor = ''; }, 2000);
+  });
+}
+
+copyBtn.addEventListener('click', function() {
+  copyToClipboard(urlPreview.textContent, this, this.querySelector('svg'));
+});
+
+installBtn.addEventListener('click', function() {
+  const url = getInstallURL();
+  copyToClipboard(url, this, installBtnText);
+});
+
+installStremioBtn.addEventListener('click', function() {
+  const url = getInstallURL();
+  const stremioUrl = 'stremio://' + url.slice(url.indexOf('://') + 3);
+  window.open(stremioUrl, '_blank');
+  setTimeout(() => {
+    copyToClipboard(url, installStremioBtn, installStremioBtn.querySelector('svg'));
+  }, 500);
+});
+
+togglePrimary();
+</script>
+</body>
+</html>

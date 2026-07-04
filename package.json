@@ -1,0 +1,18 @@
+{
+  "name": "stremio-sub-es-multifuente",
+  "version": "1.0.0",
+  "description": "Stremio addon que provee subtítulos en español desde múltiples fuentes (OpenSubtitles + SubDL)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js --launch"
+  },
+  "dependencies": {
+    "adm-zip": "^0.5.18",
+    "axios": "^1.7.2",
+    "dotenv": "^16.4.5",
+    "express": "^5.2.1",
+    "iconv-lite": "^0.7.2",
+    "stremio-addon-sdk": "^1.6.10"
+  }
+}
