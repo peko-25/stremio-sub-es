@@ -1,6 +1,7 @@
 const axios = require('axios');
 const AdmZip = require('adm-zip');
 const iconv = require('iconv-lite');
+const { getConfig } = require('../config');
 
 const API_BASE = 'https://api.subsource.net/api/v1';
 
@@ -54,11 +55,11 @@ async function getSubtitles(args, lang = 'spa') {
     const subs = subsRes.data?.data;
     if (!subs || !subs.length) return [];
 
-    const port = process.env.PORT || 7000;
+    const baseUrl = getConfig().baseUrl;
 
     return subs.map(sub => ({
       id: `subsource-${sub.subtitleId}`,
-      url: `http://127.0.0.1:${port}/subfile/subsource-${sub.subtitleId}`,
+      url: `${baseUrl}/subfile/subsource-${sub.subtitleId}`,
       lang
     }));
   } catch (error) {

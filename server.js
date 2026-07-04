@@ -7,10 +7,11 @@ const { getRouter } = require('stremio-addon-sdk');
 const addonInterface = require('./addon');
 const subdl = require('./providers/subdl');
 const subsource = require('./providers/subsource');
-const { setConfig } = require('./config');
+const { runWithConfig } = require('./config');
 
 const app = express();
 const port = process.env.PORT || 7000;
+const BASE_URL = process.env.BASE_URL || `http://127.0.0.1:${port}`;
 const CACHE_DIR = path.join(__dirname, 'cache');
 
 class AppError extends Error {
@@ -28,7 +29,8 @@ const requestLogger = (req, res, next) => {
   const start = Date.now();
   res.on('finish', () => {
     const duration = Date.now() - start;
-    console.log(`[${req.method}] ${req.path} ${res.statusCode} ${duration}ms`);
+    const path = req.originalUrl || req.path;
+    console.log(`[${req.method}] ${path} ${res.statusCode} ${duration}ms`);
   });
   next();
 };
@@ -50,12 +52,11 @@ const CONFIG_PATTERN = /^\/(auto|separate)\/(any|os|subdl|subsource)\/(spa|lat|e
 app.use((req, res, next) => {
   const match = req.path.match(CONFIG_PATTERN);
   if (match) {
-    setConfig({ mode: match[1], primary: match[2], lang: match[3] });
     req.url = match[4] || '/';
+    runWithConfig({ mode: match[1], primary: match[2], lang: match[3], baseUrl: BASE_URL }, () => next());
   } else {
-    setConfig({ mode: 'auto', primary: 'any', lang: 'spa' });
+    runWithConfig({ baseUrl: BASE_URL }, () => next());
   }
-  next();
 });
 
 app.get('/health', (req, res) => {
@@ -66,14 +67,14 @@ app.get('/configure', (req, res) => {
   res.sendFile(path.join(__dirname, 'configure.html'));
 });
 
-app.get('/subfile/translated-:hash', (req, res) => {
+app.get('/subfile/translated-:hash', asyncHandler(async (req, res) => {
   const filePath = path.join(CACHE_DIR, `${req.params.hash}.srt`);
   if (!fs.existsSync(filePath)) {
     throw new AppError('Translated subtitle not found', 404);
   }
   res.set('Content-Type', 'text/plain; charset=utf-8');
   res.send(fs.readFileSync(filePath, 'utf-8'));
-});
+}));
 
 const subtitleDownloaders = {
   'subdl': subdl.downloadSubtitle,
@@ -104,6 +105,6 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(port, () => {
-  console.log(`Addon running at http://127.0.0.1:${port}/manifest.json`);
-  console.log(`Configure: http://127.0.0.1:${port}/configure`);
+  console.log(`Addon running at ${BASE_URL}/manifest.json`);
+  console.log(`Configure: ${BASE_URL}/configure`);
 });

@@ -1,6 +1,7 @@
 const axios = require('axios');
 const AdmZip = require('adm-zip');
 const iconv = require('iconv-lite');
+const { getConfig } = require('../config');
 
 const API_BASE = 'https://api.subdl.com/api/v1';
 
@@ -33,7 +34,7 @@ async function getSubtitles(args, lang = 'spa') {
     if (!response.data?.subtitles?.length) return [];
 
     const seen = new Set();
-    const port = process.env.PORT || 7000;
+    const baseUrl = getConfig().baseUrl;
 
     const langFilter = l => {
       const lc = l.toLowerCase();
@@ -55,7 +56,7 @@ async function getSubtitles(args, lang = 'spa') {
       const fileId = `subdl-${sdId[1]}-${sdId[2]}`;
       return {
         id: `${fileId}-${lang}`,
-        url: `http://127.0.0.1:${port}/subfile/${fileId}`,
+        url: `${baseUrl}/subfile/${fileId}`,
         lang
       };
     }).filter(Boolean);

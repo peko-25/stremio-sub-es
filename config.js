@@ -1,11 +1,14 @@
-let currentConfig = { mode: 'auto', primary: 'any', lang: 'spa' };
+const { AsyncLocalStorage } = require('async_hooks');
+const als = new AsyncLocalStorage();
 
-function setConfig(config) {
-  currentConfig = config;
+const DEFAULTS = { mode: 'auto', primary: 'any', lang: 'spa', baseUrl: 'http://127.0.0.1:7000' };
+
+function runWithConfig(config, fn) {
+  return als.run({ ...DEFAULTS, ...config }, fn);
 }
 
 function getConfig() {
-  return currentConfig;
+  return als.getStore() || { ...DEFAULTS };
 }
 
-module.exports = { setConfig, getConfig };
+module.exports = { runWithConfig, getConfig };

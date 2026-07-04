@@ -49,7 +49,6 @@ builder.defineSubtitlesHandler(async function(args) {
   const config = getConfig();
   const { mode, primary, lang } = config;
   const langLabel = getLangLabel(lang);
-  const port = process.env.PORT || 7000;
 
   if (!args.id) return { subtitles: [] };
 
@@ -83,7 +82,7 @@ builder.defineSubtitlesHandler(async function(args) {
         return {
           subtitles: [{
             id: `translated-${hash}`,
-            url: `http://127.0.0.1:${port}/subfile/translated-${hash}`,
+            url: `${config.baseUrl}/subfile/translated-${hash}`,
             lang: `Subtítulos ${langLabel} + AI`
           }]
         };
